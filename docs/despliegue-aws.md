@@ -25,7 +25,7 @@ Si la cuenta está en el [AWS Free plan](https://docs.aws.amazon.com/awsaccountb
 1. Abre [Amazon Lightsail](https://lightsail.aws.amazon.com/) y elige **Create instance**.
 2. Elige una región, Linux/Unix, Ubuntu 24.04 y un plan con al menos 1 GB de RAM e IPv4 público.
 3. Nómbrala `techstore` y revisa el precio antes de crearla.
-4. En **Networking**, crea y adjunta una IP estática. Abre los puertos TCP 80 y 443; limita SSH 22 a tu IP si es posible. No abras el puerto 3001 públicamente.
+4. En **Networking**, crea y adjunta una IP estática. En el firewall, agrega una regla **HTTPS / TCP / 443** con origen público (elige el preset de cualquier IP; no dejes `Custom` con la dirección vacía). Comprueba que también existan **HTTP / TCP / 80** y **SSH / TCP / 22**. No abras el puerto 3001 públicamente.
 5. Si tienes dominio propio, crea un registro A hacia la IP estática. Si no, forma un nombre gratuito reemplazando los puntos de la IP por guiones y agregando `.sslip.io`. Por ejemplo, la IP `12.34.56.78` corresponde a `12-34-56-78.sslip.io`. No hay que configurar DNS ni crear una cuenta adicional. Verifica desde tu laptop que el nombre resuelva a la IP antes de seguir.
 
 `sslip.io` es un servicio DNS externo gratuito para este laboratorio. Si cambias la IP, también cambiará la URL; por eso se recomienda la IP estática. [Funcionamiento y HTTPS de sslip.io](https://sslip.io/).
@@ -54,10 +54,10 @@ cd techstore
 npm ci
 npm run build
 npm run setup
-nano .env
+sed -i 's|^PUBLIC_BASE_URL=.*|PUBLIC_BASE_URL=https://TU_DOMINIO|' .env
 ```
 
-En `.env`, conserva las dos claves generadas y ajusta `PUBLIC_BASE_URL=https://TU_DOMINIO`. Para el acceso social, añade las credenciales de producción según [la guía OAuth](oauth.md). Guarda `.env` fuera de Git y haz una copia segura: perder `MFA_ENCRYPTION_KEY` impide leer los secretos TOTP existentes.
+En el comando anterior reemplaza `TU_DOMINIO` por tu nombre real, por ejemplo `12-34-56-78.sslip.io`. El cambio conserva las dos claves generadas en `.env`. Para el acceso social, añade las credenciales de producción según [la guía OAuth](oauth.md). Guarda `.env` fuera de Git y haz una copia segura: perder `MFA_ENCRYPTION_KEY` impide leer los secretos TOTP existentes.
 
 Activa el servicio de la aplicación:
 
@@ -65,20 +65,31 @@ Activa el servicio de la aplicación:
 sudo cp deploy/techstore.service /etc/systemd/system/techstore.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now techstore
-sudo systemctl status techstore
-curl http://127.0.0.1:3001/api/health
+sudo systemctl status techstore --no-pager
+curl -fsS http://127.0.0.1:3001/api/health
 ```
+
+El último comando debe responder con `"status":"ok"`. Si falla, revisa `journalctl -u techstore -n 100 --no-pager` antes de continuar.
 
 ## 4. Activar HTTPS
 
-Instala Caddy con el [paquete oficial para Ubuntu](https://caddyserver.com/docs/install). Edita `/etc/caddy/Caddyfile` según `deploy/Caddyfile.example`, reemplazando `TU_DOMINIO` por el dominio que apunta a la IP estática. Luego:
+Instala Caddy con el [paquete oficial para Ubuntu](https://caddyserver.com/docs/install):
 
 ```bash
+sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl gnupg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+sudo chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg /etc/apt/sources.list.d/caddy-stable.list
+sudo apt update
+sudo apt install -y caddy
+cd /home/ubuntu/techstore
+sed 's/TU_DOMINIO/12-34-56-78.sslip.io/' deploy/Caddyfile.example | sudo tee /etc/caddy/Caddyfile >/dev/null
+sudo caddy validate --config /etc/caddy/Caddyfile
 sudo systemctl reload caddy
-curl https://TU_DOMINIO/api/health
+curl -fsS https://12-34-56-78.sslip.io/api/health
 ```
 
-Caddy obtiene el certificado automáticamente cuando el DNS apunta a la instancia y los puertos 80 y 443 están abiertos. Consulta la [guía oficial de proxy y HTTPS](https://caddyserver.com/docs/quick-starts/reverse-proxy).
+Reemplaza `12-34-56-78.sslip.io` por tu nombre real en los dos comandos que lo contienen. Caddy obtiene el certificado automáticamente cuando el DNS apunta a la instancia y los puertos 80 y 443 están abiertos. Si la primera comprobación HTTPS falla mientras se emite el certificado, espera un minuto y repítela. Consulta la [guía oficial de proxy y HTTPS](https://caddyserver.com/docs/quick-starts/reverse-proxy).
 
 ## 5. Verificar y actualizar
 
