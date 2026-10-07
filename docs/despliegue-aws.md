@@ -18,6 +18,8 @@ Configura en [AWS Budgets](https://console.aws.amazon.com/cost-management/home#/
 
 Consulta el precio en la consola antes de confirmar la instancia. Como referencia, el plan Linux con IPv4 público de 1 GB aparece a **USD 7/mes** en la [página oficial de precios de Lightsail](https://aws.amazon.com/lightsail/pricing/). Podrían añadirse impuestos, dominio, copias de seguridad u otros consumos. Una instancia detenida sigue generando cargos hasta eliminarla.
 
+Si la cuenta está en el [AWS Free plan](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-plans.html), los créditos promocionales disponibles se aplican automáticamente a los servicios elegibles, incluido Lightsail. Consulta el saldo y la fecha de vencimiento en **Billing > Free plan status**: el plan termina al agotarse los créditos o al cumplirse su plazo. Para este laboratorio, crea una sola instancia de 1 GB y usa la base SQLite integrada; evita bases de datos administradas, balanceadores, discos adicionales y snapshots mientras no sean necesarios. El [registro de dominios en Route 53 no está cubierto por los créditos promocionales](https://aws.amazon.com/awscredits/).
+
 ## 2. Crear la instancia
 
 1. Abre [Amazon Lightsail](https://lightsail.aws.amazon.com/) y elige **Create instance**.
