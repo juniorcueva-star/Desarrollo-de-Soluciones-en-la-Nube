@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import AuthPanel from './AuthPanel.jsx'
 import './App.css'
 
 const stages = [
@@ -10,6 +11,7 @@ const stages = [
 
 function App() {
   const [apiStatus, setApiStatus] = useState('checking')
+  const [session, setSession] = useState(null)
 
   async function checkApi() {
     setApiStatus('checking')
@@ -73,6 +75,17 @@ function App() {
             <div className="art-chip chip-three">ACCESO</div>
           </div>
         </section>
+
+        {session ? (
+          <section className="signed-in" aria-labelledby="signed-in-title">
+            <div>
+              <span className="eyebrow">Sesión verificada con MFA</span>
+              <h2 id="signed-in-title">Hola, {session.user.fullName}</h2>
+              <p>Entraste como empleado de la tienda asignada. El inventario llegará en el siguiente avance.</p>
+            </div>
+            <button type="button" onClick={() => setSession(null)}>Cerrar sesión</button>
+          </section>
+        ) : <AuthPanel onAuthenticated={setSession} />}
 
         <section className="roadmap" aria-labelledby="roadmap-title">
           <div className="section-heading">

@@ -35,10 +35,34 @@ h1 { max-width: 660px; margin: 20px 0; font-size: clamp(45px, 5.5vw, 76px); line
 .stage-card h3 { margin: 25px 0 8px; font-size: 19px; letter-spacing: -.025em; }
 .stage-card p { color: #71848b; font-size: 14px; line-height: 1.5; }
 .site-footer { padding: 22px 30px 35px; border-top: 1px solid #e0ebeb; color: #7b9097; font-size: 13px; }
+.auth-section, .signed-in { max-width: 1180px; margin: 0 auto; padding: 35px 30px 75px; }
+.auth-section { display: grid; grid-template-columns: .9fr 1.1fr; gap: 80px; align-items: start; }
+.auth-intro h2, .signed-in h2 { font-size: 40px; line-height: 1.08; letter-spacing: -.045em; margin: 11px 0 18px; }
+.auth-intro p, .signed-in p { color: #617782; line-height: 1.6; max-width: 450px; }
+.auth-intro ul { padding-left: 20px; color: #3d626c; line-height: 2; font-size: 14px; }
+.auth-card { padding: 30px; border: 1px solid #dce9e9; border-radius: 23px; background: #fff; box-shadow: 0 16px 40px #164b5210; }
+.auth-tabs { display: flex; gap: 8px; margin-bottom: 23px; padding: 5px; border-radius: 11px; background: #edf4f4; }
+.auth-tabs button { flex: 1; border: 0; border-radius: 8px; padding: 10px; background: transparent; color: #55717a; cursor: pointer; font-weight: 700; }
+.auth-tabs button.active { background: white; color: #126e73; box-shadow: 0 2px 9px #164b5218; }
+.auth-card form { display: grid; gap: 16px; }
+.auth-card label { display: grid; gap: 7px; color: #294650; font-size: 13px; font-weight: 700; }
+.auth-card input, .auth-card select { width: 100%; padding: 12px 13px; border: 1px solid #cbdcdd; border-radius: 9px; background: #fff; color: #173440; font: inherit; font-size: 15px; }
+.auth-card input:focus, .auth-card select:focus { outline: 2px solid #55b1b1; outline-offset: 1px; }
+.field-hint { margin: -7px 0 0; color: #71848b; font-size: 12px; line-height: 1.4; }
+.form-error { margin: 0; border-radius: 8px; padding: 10px 12px; color: #9f3737; background: #fff0ef; font-size: 13px; }
+.primary-button { width: 100%; margin-top: 2px; border: 0; border-radius: 9px; padding: 13px 16px; background: #14777a; color: white; font-weight: 800; cursor: pointer; }
+.primary-button:hover { background: #0c6267; }.primary-button:disabled { opacity: .6; cursor: wait; }
+.auth-card h3 { font-size: 25px; margin: 8px 0 20px; letter-spacing: -.03em; }
+.qr-setup { display: grid; justify-items: start; gap: 12px; margin-bottom: 20px; color: #617782; font-size: 13px; line-height: 1.5; }
+.qr-setup svg { border: 1px solid #dce9e9; border-radius: 8px; }.qr-setup p { margin: 0; }.qr-setup code { overflow-wrap: anywhere; color: #174c55; font-size: 13px; }
+.text-button { border: 0; background: none; color: #126e73; cursor: pointer; font-weight: 700; }
+.signed-in { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.signed-in button { border: 1px solid #bcd4d4; border-radius: 9px; padding: 12px 16px; background: white; color: #126e73; cursor: pointer; font-weight: 700; }
 @media (max-width: 850px) {
   .hero { grid-template-columns: 1fr; padding-top: 45px; }
   .hero-art { height: 350px; }
   .stage-grid { grid-template-columns: repeat(2, 1fr); }
+  .auth-section { grid-template-columns: 1fr; gap: 25px; }
 }
 @media (max-width: 540px) {
   .site-header { padding: 20px; }.header-label { display: none; }
@@ -48,4 +72,5 @@ h1 { max-width: 660px; margin: 20px 0; font-size: clamp(45px, 5.5vw, 76px); line
   .roadmap { padding: 30px 20px 75px; }.section-heading { display: block; }.section-heading p { margin-top: 12px; }
   .stage-grid { grid-template-columns: 1fr; }.stage-card { min-height: 145px; }.stage-card h3 { margin-top: 16px; }
   .site-footer { margin: 0 20px; padding-left: 0; }
+  .auth-section, .signed-in { padding: 25px 20px 55px; }.auth-card { padding: 22px; }.signed-in { display: block; }
 }
