@@ -22,3 +22,22 @@ Aplicación web para el caso de estudio del laboratorio 8 de Desarrollo de Soluc
 El desarrollo comienza en la laptop. La configuración de OAuth y el despliegue en AWS se harán en etapas posteriores, cuando la aplicación local funcione.
 
 Consulta [el plan de trabajo](docs/plan.md) para ver las etapas y sus criterios de avance.
+
+## Ejecutar en esta laptop
+
+Se requiere Node.js 24 o superior y npm. Desde la raíz del repositorio:
+
+```powershell
+npm install
+npm run dev:api
+```
+
+En una segunda terminal, desde la misma carpeta:
+
+```powershell
+npm run dev:web
+```
+
+Abre la dirección local que muestre Vite, normalmente `http://localhost:5173`. La pantalla indica si la API y SQLite están conectadas. El endpoint de comprobación también se puede abrir en `http://127.0.0.1:3001/api/health`.
+
+La aplicación todavía está en su etapa de preparación. El registro, el inventario y los inicios de sesión se añadirán en los siguientes commits.
