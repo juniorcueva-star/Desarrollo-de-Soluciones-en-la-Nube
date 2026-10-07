@@ -92,9 +92,9 @@ export default function AuthPanel({ onAuthenticated }) {
   return (
     <section className="auth-section" aria-labelledby="auth-title">
       <div className="auth-intro">
-        <span className="eyebrow">Acceso local</span>
-        <h2 id="auth-title">Prueba el registro seguro</h2>
-        <p>Crea una cuenta de empleado, configura una app de códigos y completa el segundo factor para entrar.</p>
+        <span className="eyebrow">Acceso seguro</span>
+        <h2 id="auth-title">Ingresa a TechStore</h2>
+        <p>Usa tu cuenta de empleado y completa el segundo factor para acceder al inventario.</p>
         <ul>
           <li>Contraseña validada y protegida con scrypt</li>
           <li>Bloqueo tras cinco intentos fallidos</li>

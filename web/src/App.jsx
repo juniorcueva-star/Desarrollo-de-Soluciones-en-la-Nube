@@ -47,19 +47,19 @@ function App() {
       <main>
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero-copy">
-            <span className="eyebrow">Proyecto en construcción</span>
+            <span className="eyebrow">Inventario en la nube</span>
             <h1 id="hero-title">Inventario claro. Acceso seguro.</h1>
             <p>
-              Sistema centralizado para las tiendas TechStore. Esta primera versión
-              comprueba que la interfaz, la API y la base de datos funcionan en esta laptop.
+              Sistema centralizado para las tiendas TechStore. Gestiona productos,
+              existencias y permisos con acceso seguro desde la nube.
             </p>
             <div className="status-card">
               <span className={`status-dot ${apiStatus}`} aria-hidden="true" />
               <div>
                 <strong>Estado de la API</strong>
                 <span aria-live="polite">
-                  {apiStatus === 'online' && 'Conectada a SQLite'}
-                  {apiStatus === 'offline' && 'Sin conexión. Inicia la API en otra terminal.'}
+                  {apiStatus === 'online' && 'Servicio disponible'}
+                  {apiStatus === 'offline' && 'Sin conexión con el servidor. Intenta nuevamente.'}
                   {apiStatus === 'checking' && 'Comprobando conexión…'}
                 </span>
               </div>
@@ -91,10 +91,10 @@ function App() {
         <section className="roadmap" aria-labelledby="roadmap-title">
           <div className="section-heading">
             <div>
-              <span className="eyebrow">Próximas etapas</span>
-              <h2 id="roadmap-title">Lo que construiremos</h2>
+              <span className="eyebrow">Funcionalidades</span>
+              <h2 id="roadmap-title">Lo que puedes hacer</h2>
             </div>
-            <p>Avanzaremos por funcionalidades pequeñas, verificadas y guardadas en Git.</p>
+            <p>Accede al inventario de acuerdo con los permisos de tu perfil.</p>
           </div>
           <div className="stage-grid">
             {stages.map((stage) => (
