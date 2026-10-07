@@ -17,7 +17,7 @@ Cada etapa se guardará en un commit verificable. No se guardarán contraseñas,
 - Configurar TOTP y verificar hasta tres intentos de código por inicio de sesión.
 - Entregar el JWT solo después de superar TOTP.
 
-El registro público no podrá asignar permisos de administrador ni gerente. La asignación de roles y tiendas quedará bajo control del administrador.
+El registro público no podrá asignar permisos de administrador ni gerente. Las cuentas nuevas quedarán pendientes y no podrán usar el inventario hasta que el administrador las active y asigne el perfil y la tienda.
 
 ## 3. Inventario y permisos
 

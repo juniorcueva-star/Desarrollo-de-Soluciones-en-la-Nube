@@ -112,6 +112,7 @@ export default function Dashboard({ session, onLogout }) {
     run(() => api(`/users/${target.id}`, token, 'PATCH', {
       role: edit.role || target.role,
       storeId: Number(edit.storeId || target.storeId),
+      active: edit.active ?? Boolean(target.active),
     }), 'Usuario actualizado.')
   }
 
@@ -184,12 +185,13 @@ export default function Dashboard({ session, onLogout }) {
             <label>Nueva tienda<input required minLength="2" maxLength="80" value={newStore} onChange={(event) => setNewStore(event.target.value)} /></label>
             <button className="outline-button" disabled={busy}>Crear tienda</button>
           </form>
-          <div className="table-wrap"><table><thead><tr><th>Usuario</th><th>Correo</th><th>Perfil</th><th>Tienda</th><th></th></tr></thead><tbody>
+          <div className="table-wrap"><table><thead><tr><th>Usuario</th><th>Correo</th><th>Perfil</th><th>Tienda</th><th>Estado</th><th></th></tr></thead><tbody>
             {users.map((target) => (
               <tr key={target.id}>
                 <td>{target.fullName}</td><td>{target.email}</td>
                 <td><select aria-label={`Perfil de ${target.fullName}`} value={userEdits[target.id]?.role || target.role} onChange={(event) => setUserEdits({ ...userEdits, [target.id]: { ...userEdits[target.id], role: event.target.value } })}>{Object.entries(roleNames).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></td>
                 <td><select aria-label={`Tienda de ${target.fullName}`} value={userEdits[target.id]?.storeId || target.storeId} onChange={(event) => setUserEdits({ ...userEdits, [target.id]: { ...userEdits[target.id], storeId: event.target.value } })}>{stores.map((store) => <option key={store.id} value={store.id}>{store.name}</option>)}</select></td>
+                <td><select aria-label={`Estado de ${target.fullName}`} value={String(userEdits[target.id]?.active ?? Boolean(target.active))} onChange={(event) => setUserEdits({ ...userEdits, [target.id]: { ...userEdits[target.id], active: event.target.value === 'true' } })}><option value="false">Pendiente</option><option value="true">Activa</option></select></td>
                 <td><button className="outline-button" type="button" disabled={busy} onClick={() => saveUser(target)}>Guardar</button></td>
               </tr>
             ))}

@@ -77,7 +77,16 @@ function App() {
           </div>
         </section>
 
-        {session ? <Dashboard session={session} onLogout={() => setSession(null)} /> : <AuthPanel onAuthenticated={setSession} />}
+        {session?.user.active ? (
+          <Dashboard session={session} onLogout={() => setSession(null)} />
+        ) : session ? (
+          <section className="pending-account">
+            <span className="eyebrow">Cuenta protegida</span>
+            <h2>Tu cuenta espera activación</h2>
+            <p>Completaste el segundo factor. Un administrador debe asignarte acceso antes de usar el inventario. Después de la activación, vuelve a iniciar sesión.</p>
+            <button className="outline-button" type="button" onClick={() => setSession(null)}>Cerrar sesión</button>
+          </section>
+        ) : <AuthPanel onAuthenticated={setSession} />}
 
         <section className="roadmap" aria-labelledby="roadmap-title">
           <div className="section-heading">

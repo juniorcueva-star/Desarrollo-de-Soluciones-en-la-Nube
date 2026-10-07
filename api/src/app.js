@@ -15,7 +15,7 @@ app.use('/api', (_request, response, next) => {
 })
 
 app.get('/api/health', (_request, response) => {
-  const databaseReady = database.prepare("SELECT value FROM app_meta WHERE key = 'schema_version'").get()?.value === '4'
+  const databaseReady = database.prepare("SELECT value FROM app_meta WHERE key = 'schema_version'").get()?.value === '5'
   response.json({ service: 'techstore-api', status: databaseReady ? 'ok' : 'error' })
 })
 

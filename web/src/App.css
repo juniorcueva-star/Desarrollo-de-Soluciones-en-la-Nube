@@ -62,6 +62,7 @@ h1 { max-width: 660px; margin: 20px 0; font-size: clamp(45px, 5.5vw, 76px); line
 .signed-in { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .signed-in button { border: 1px solid #bcd4d4; border-radius: 9px; padding: 12px 16px; background: white; color: #126e73; cursor: pointer; font-weight: 700; }
 .dashboard { max-width: 1180px; margin: 0 auto; padding: 35px 30px 90px; }
+.pending-account { max-width: 1180px; margin: 0 auto; padding: 55px 30px 90px; }.pending-account h2 { margin: 10px 0; font-size: 38px; letter-spacing: -.04em; }.pending-account p { max-width: 560px; color: #617782; line-height: 1.6; }
 .dashboard-head, .dashboard-section-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
 .dashboard-head h2 { margin: 8px 0 9px; font-size: 40px; letter-spacing: -.045em; }.dashboard-head p { color: #617782; }
 .outline-button { border: 1px solid #bcd4d4; border-radius: 9px; padding: 10px 14px; background: white; color: #126e73; cursor: pointer; font-weight: 700; }

@@ -79,6 +79,8 @@ test('registro, MFA, JWT y bloqueo de intentos', async () => {
   assert.ok(verified.data.token)
   const me = await request('/api/auth/me', null, verified.data.token)
   assert.equal(me.data.role, 'employee')
+  assert.equal(me.data.active, false)
+  assert.equal((await request('/api/products', null, verified.data.token)).status, 403)
   assert.equal((await request('/api/auth/mfa/verify', {
     challengeToken: login.data.challengeToken, code: currentCode(secret),
   })).status, 401)
@@ -104,15 +106,19 @@ async function registerVerified(email, storeId = 1) {
 
 test('permisos de tienda, existencias y reportes', async () => {
   const adminToken = await registerVerified('admin@example.com')
-  database.prepare("UPDATE users SET role = 'admin' WHERE email = 'admin@example.com'").run()
+  database.prepare("UPDATE users SET role = 'admin', active = 1 WHERE email = 'admin@example.com'").run()
   const secondStore = await request('/api/stores', { name: 'Tienda Sur' }, adminToken)
   assert.equal(secondStore.status, 201)
 
   const managerToken = await registerVerified('gerente@example.com')
   const employeeToken = await registerVerified('ventas@example.com')
   const auditorToken = await registerVerified('auditor@example.com')
-  database.prepare("UPDATE users SET role = 'manager' WHERE email = 'gerente@example.com'").run()
-  database.prepare("UPDATE users SET role = 'auditor' WHERE email = 'auditor@example.com'").run()
+  for (const [email, role] of [
+    ['gerente@example.com', 'manager'], ['ventas@example.com', 'employee'], ['auditor@example.com', 'auditor'],
+  ]) {
+    const target = database.prepare('SELECT id FROM users WHERE email = ?').get(email)
+    assert.equal((await request(`/api/users/${target.id}`, { role, active: true }, adminToken, 'PATCH')).status, 200)
+  }
 
   const ownProduct = await request('/api/products', {
     storeId: 1, sku: 'LAP-01', name: 'Laptop de prueba', priceCents: 250000, stock: 10,

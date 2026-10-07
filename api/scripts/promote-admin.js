@@ -10,7 +10,7 @@ if (!email) {
     console.error('El usuario no existe o todavía no completó MFA.')
     process.exitCode = 1
   } else {
-    database.prepare("UPDATE users SET role = 'admin' WHERE id = ?").run(user.id)
+    database.prepare("UPDATE users SET role = 'admin', active = 1 WHERE id = ?").run(user.id)
     console.log(`Administrador activado: ${email}`)
   }
 }

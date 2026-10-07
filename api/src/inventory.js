@@ -4,6 +4,10 @@ import { database } from './database.js'
 
 export const inventoryRouter = Router()
 inventoryRouter.use(['/products', '/reports', '/users', '/stores'], authenticate)
+inventoryRouter.use(['/products', '/reports', '/users', '/stores'], (request, response, next) => {
+  if (!request.user.active) return response.status(403).json({ error: 'Tu cuenta espera activación del administrador.' })
+  next()
+})
 
 const productColumns = `
   SELECT p.id, p.store_id AS storeId, s.name AS storeName, p.sku, p.name,
@@ -149,7 +153,7 @@ inventoryRouter.get('/users', (request, response) => {
   if (!allowed(response, request.user, ['admin'])) return
   response.json(database.prepare(`
     SELECT u.id, u.email, u.full_name AS fullName, u.role, u.store_id AS storeId,
-           s.name AS storeName, u.mfa_enabled AS mfaEnabled
+           s.name AS storeName, u.mfa_enabled AS mfaEnabled, u.active
     FROM users u JOIN stores s ON s.id = u.store_id ORDER BY u.id
   `).all())
 })
@@ -161,15 +165,17 @@ inventoryRouter.patch('/users/:id', (request, response) => {
   if (!target) return response.status(404).json({ error: 'Usuario no encontrado.' })
   const role = request.body?.role || target.role
   const storeId = request.body?.storeId ? idFrom(request.body.storeId) : target.store_id
-  if (!roles.includes(role) || !storeId || !database.prepare('SELECT id FROM stores WHERE id = ?').get(storeId)) {
+  const active = request.body?.active === undefined ? target.active : request.body.active
+  if (!roles.includes(role) || !storeId || !database.prepare('SELECT id FROM stores WHERE id = ?').get(storeId) ||
+      ![0, 1, false, true].includes(active)) {
     return response.status(400).json({ error: 'Rol o tienda inválidos.' })
   }
-  if (target.role === 'admin' && role !== 'admin' &&
-      database.prepare("SELECT COUNT(*) AS count FROM users WHERE role = 'admin'").get().count === 1) {
+  if (target.role === 'admin' && target.active && (role !== 'admin' || !active) &&
+      database.prepare("SELECT COUNT(*) AS count FROM users WHERE role = 'admin' AND active = 1").get().count === 1) {
     return response.status(409).json({ error: 'Debe existir al menos un administrador.' })
   }
-  database.prepare('UPDATE users SET role = ?, store_id = ? WHERE id = ?').run(role, storeId, id)
-  response.json({ id, role, storeId })
+  database.prepare('UPDATE users SET role = ?, store_id = ?, active = ? WHERE id = ?').run(role, storeId, Number(active), id)
+  response.json({ id, role, storeId, active: Boolean(active) })
 })
 
 inventoryRouter.post('/stores', (request, response) => {

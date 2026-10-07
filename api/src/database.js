@@ -26,6 +26,7 @@ database.exec(`
     full_name TEXT NOT NULL,
     store_id INTEGER NOT NULL REFERENCES stores(id),
     role TEXT NOT NULL DEFAULT 'employee' CHECK (role IN ('admin', 'manager', 'employee', 'auditor')),
+    active INTEGER NOT NULL DEFAULT 0 CHECK (active IN (0, 1)),
     totp_secret TEXT NOT NULL,
     mfa_enabled INTEGER NOT NULL DEFAULT 0 CHECK (mfa_enabled IN (0, 1)),
     last_totp_step INTEGER NOT NULL DEFAULT -1,
@@ -83,5 +84,9 @@ database.exec(`
   ) STRICT;
 
   INSERT OR IGNORE INTO stores (id, name) VALUES (1, 'Tienda de demostración');
-  INSERT OR REPLACE INTO app_meta (key, value) VALUES ('schema_version', '4');
 `)
+
+if (!database.prepare('PRAGMA table_info(users)').all().some((column) => column.name === 'active')) {
+  database.exec('ALTER TABLE users ADD COLUMN active INTEGER NOT NULL DEFAULT 0 CHECK (active IN (0, 1))')
+}
+database.prepare("INSERT OR REPLACE INTO app_meta (key, value) VALUES ('schema_version', '5')").run()

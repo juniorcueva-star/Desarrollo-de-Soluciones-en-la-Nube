@@ -17,6 +17,7 @@ function publicUser(user) {
     fullName: user.full_name,
     storeId: user.store_id,
     role: user.role,
+    active: Boolean(user.active),
   }
 }
 

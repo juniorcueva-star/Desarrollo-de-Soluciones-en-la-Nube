@@ -52,4 +52,4 @@ Para activar el primer administrador, registra una cuenta, completa MFA y ejecut
 npm run admin:promote --workspace api -- correo@ejemplo.com
 ```
 
-Este comando se ejecuta solo en la máquina del proyecto. Los registros públicos reciben el perfil de empleado; el administrador puede asignar perfiles y tiendas después.
+Este comando se ejecuta solo en la máquina del proyecto. Los registros públicos quedan pendientes; el administrador activa la cuenta y asigna su perfil y tienda desde la interfaz.
