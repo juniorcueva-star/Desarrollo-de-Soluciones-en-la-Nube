@@ -20,7 +20,7 @@ function publicUser(user) {
   }
 }
 
-function createChallenge(userId, purpose) {
+export function createChallenge(userId, purpose) {
   const token = randomBytes(32).toString('base64url')
   database.prepare('DELETE FROM auth_challenges WHERE expires_at < ? OR consumed = 1').run(Date.now())
   database.prepare('INSERT INTO auth_challenges (token_hash, user_id, purpose, expires_at) VALUES (?, ?, ?, ?)')

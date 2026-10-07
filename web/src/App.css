@@ -56,6 +56,9 @@ h1 { max-width: 660px; margin: 20px 0; font-size: clamp(45px, 5.5vw, 76px); line
 .qr-setup { display: grid; justify-items: start; gap: 12px; margin-bottom: 20px; color: #617782; font-size: 13px; line-height: 1.5; }
 .qr-setup svg { border: 1px solid #dce9e9; border-radius: 8px; }.qr-setup p { margin: 0; }.qr-setup code { overflow-wrap: anywhere; color: #174c55; font-size: 13px; }
 .text-button { border: 0; background: none; color: #126e73; cursor: pointer; font-weight: 700; }
+.social-login { margin-top: 25px; padding-top: 20px; border-top: 1px solid #e5eeee; }.social-login p { color: #71848b; font-size: 13px; }
+.social-login > div { display: flex; gap: 9px; }.social-login a, .social-login span { flex: 1; border: 1px solid #d2e3e3; border-radius: 8px; padding: 10px 12px; text-align: center; text-decoration: none; font-size: 13px; font-weight: 700; }
+.social-login a { color: #126e73; background: white; }.social-login a:hover { background: #eaf5f4; }.social-login span { color: #9aabad; background: #f7f9f9; }
 .signed-in { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .signed-in button { border: 1px solid #bcd4d4; border-radius: 9px; padding: 12px 16px; background: white; color: #126e73; cursor: pointer; font-weight: 700; }
 .dashboard { max-width: 1180px; margin: 0 auto; padding: 35px 30px 90px; }

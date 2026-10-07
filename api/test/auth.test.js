@@ -10,6 +10,7 @@ process.env.TECHSTORE_DB_PATH = ':memory:'
 const { app } = await import('../src/app.js')
 const { verifyTotp } = await import('../src/security.js')
 const { database } = await import('../src/database.js')
+const { createChallenge } = await import('../src/auth.js')
 const server = app.listen(0, '127.0.0.1')
 await once(server, 'listening')
 const base = `http://127.0.0.1:${server.address().port}`
@@ -135,4 +136,29 @@ test('permisos de tienda, existencias y reportes', async () => {
   assert.equal((await request('/api/reports/summary', null, managerToken)).data.productCount, 1)
   assert.equal((await request('/api/reports/summary', null, auditorToken)).data.productCount, 2)
   assert.equal((await request('/api/reports/summary', null, employeeToken)).status, 403)
+})
+
+test('OAuth prepara estado seguro y entrega el reto MFA', async () => {
+  assert.deepEqual((await request('/api/oauth/available')).data, { google: false, github: false })
+  process.env.GITHUB_CLIENT_ID = 'test-client'
+  process.env.GITHUB_CLIENT_SECRET = 'test-secret'
+  const start = await fetch(`${base}/api/oauth/github/start`, { redirect: 'manual' })
+  assert.equal(start.status, 302)
+  const authorization = new URL(start.headers.get('location'))
+  assert.equal(authorization.hostname, 'github.com')
+  assert.equal(authorization.searchParams.get('code_challenge_method'), 'S256')
+  assert.ok(authorization.searchParams.get('state'))
+  assert.ok(start.headers.get('set-cookie').includes('HttpOnly'))
+
+  const user = database.prepare("SELECT id FROM users WHERE email = 'admin@example.com'").get()
+  const challenge = createChallenge(user.id, 'setup')
+  const finish = await fetch(`${base}/api/oauth/finish`, {
+    headers: { Cookie: `techstore_oauth_pending=${challenge}` },
+  })
+  assert.equal(finish.status, 200)
+  const result = await finish.json()
+  assert.equal(result.challengeToken, challenge)
+  assert.ok(result.setupUri.startsWith('otpauth://totp/'))
+  delete process.env.GITHUB_CLIENT_ID
+  delete process.env.GITHUB_CLIENT_SECRET
 })

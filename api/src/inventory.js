@@ -3,7 +3,7 @@ import { authenticate } from './auth.js'
 import { database } from './database.js'
 
 export const inventoryRouter = Router()
-inventoryRouter.use(authenticate)
+inventoryRouter.use(['/products', '/reports', '/users', '/stores'], authenticate)
 
 const productColumns = `
   SELECT p.id, p.store_id AS storeId, s.name AS storeName, p.sku, p.name,

@@ -67,6 +67,21 @@ database.exec(`
   ) STRICT;
 
   CREATE INDEX IF NOT EXISTS idx_products_store ON products(store_id);
+
+  CREATE TABLE IF NOT EXISTS oauth_states (
+    state_hash TEXT PRIMARY KEY,
+    provider TEXT NOT NULL,
+    code_verifier TEXT NOT NULL,
+    expires_at INTEGER NOT NULL
+  ) STRICT;
+
+  CREATE TABLE IF NOT EXISTS oauth_identities (
+    provider TEXT NOT NULL,
+    provider_user_id TEXT NOT NULL,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    PRIMARY KEY (provider, provider_user_id)
+  ) STRICT;
+
   INSERT OR IGNORE INTO stores (id, name) VALUES (1, 'Tienda de demostración');
-  INSERT OR REPLACE INTO app_meta (key, value) VALUES ('schema_version', '3');
+  INSERT OR REPLACE INTO app_meta (key, value) VALUES ('schema_version', '4');
 `)

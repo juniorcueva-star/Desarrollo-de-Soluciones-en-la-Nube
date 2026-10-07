@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 
 async function post(path, body) {
@@ -16,16 +16,37 @@ export default function AuthPanel({ onAuthenticated }) {
   const [mode, setMode] = useState('login')
   const [challenge, setChallenge] = useState(null)
   const [stores, setStores] = useState([])
+  const [socialProviders, setSocialProviders] = useState({ google: false, github: false })
   const [form, setForm] = useState({ email: '', password: '', fullName: '', storeId: '' })
   const [code, setCode] = useState('')
-  const [error, setError] = useState('')
+  const [error, setError] = useState(() => new URLSearchParams(window.location.search).get('oauth') === 'error' ? 'El acceso social no se completó. Intenta de nuevo.' : '')
   const [loading, setLoading] = useState(false)
+  const oauthHandled = useRef(false)
 
   useEffect(() => {
     fetch('/api/stores')
       .then((response) => response.json())
       .then(setStores)
       .catch(() => setStores([]))
+    fetch('/api/oauth/available')
+      .then((response) => response.json())
+      .then(setSocialProviders)
+      .catch(() => setSocialProviders({ google: false, github: false }))
+    const result = new URLSearchParams(window.location.search).get('oauth')
+    if (oauthHandled.current) return
+    oauthHandled.current = true
+    if (result === 'complete') {
+      fetch('/api/oauth/finish', { credentials: 'same-origin' })
+        .then(async (response) => {
+          const data = await response.json()
+          if (!response.ok) throw new Error(data.error || 'No se pudo completar el acceso social.')
+          setChallenge(data)
+        })
+        .catch((requestError) => setError(requestError.message))
+      window.history.replaceState({}, '', window.location.pathname)
+    } else if (result === 'error') {
+      window.history.replaceState({}, '', window.location.pathname)
+    }
   }, [])
 
   function update(field, value) {
@@ -103,6 +124,13 @@ export default function AuthPanel({ onAuthenticated }) {
               {error && <p className="form-error" role="alert">{error}</p>}
               <button className="primary-button" disabled={loading || (mode === 'register' && stores.length === 0)}>{loading ? 'Procesando…' : mode === 'register' ? 'Crear cuenta' : 'Continuar'}</button>
             </form>
+            <div className="social-login">
+              <p>También puedes continuar con:</p>
+              <div>
+                {socialProviders.google ? <a href="/api/oauth/google/start">Google</a> : <span>Google · pendiente</span>}
+                {socialProviders.github ? <a href="/api/oauth/github/start">GitHub</a> : <span>GitHub · pendiente</span>}
+              </div>
+            </div>
           </>
         ) : (
           <>
