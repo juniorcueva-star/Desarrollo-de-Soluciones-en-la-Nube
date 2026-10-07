@@ -139,7 +139,7 @@ export default function AuthPanel({ onAuthenticated }) {
             {setupSecret && (
               <div className="qr-setup">
                 <QRCodeSVG value={challenge.setupUri} size={156} marginSize={2} title="Código QR para configurar el autenticador" />
-                <p>Escanea el QR con Google Authenticator o una app compatible. También puedes ingresar esta clave manualmente:</p>
+                <p>Configura el autenticador una sola vez para esta cuenta, incluso si ingresas con Google o GitHub. En los próximos accesos solo escribirás el código de 6 dígitos. Escanea el QR con Google Authenticator o una app compatible; también puedes ingresar esta clave manualmente:</p>
                 <code>{setupSecret}</code>
               </div>
             )}
