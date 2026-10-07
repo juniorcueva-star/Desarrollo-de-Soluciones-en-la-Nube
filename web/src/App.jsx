@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import AuthPanel from './AuthPanel.jsx'
+import Dashboard from './Dashboard.jsx'
 import './App.css'
 
 const stages = [
@@ -76,16 +77,7 @@ function App() {
           </div>
         </section>
 
-        {session ? (
-          <section className="signed-in" aria-labelledby="signed-in-title">
-            <div>
-              <span className="eyebrow">Sesión verificada con MFA</span>
-              <h2 id="signed-in-title">Hola, {session.user.fullName}</h2>
-              <p>Entraste como empleado de la tienda asignada. El inventario llegará en el siguiente avance.</p>
-            </div>
-            <button type="button" onClick={() => setSession(null)}>Cerrar sesión</button>
-          </section>
-        ) : <AuthPanel onAuthenticated={setSession} />}
+        {session ? <Dashboard session={session} onLogout={() => setSession(null)} /> : <AuthPanel onAuthenticated={setSession} />}
 
         <section className="roadmap" aria-labelledby="roadmap-title">
           <div className="section-heading">

@@ -43,7 +43,7 @@ Abre la dirección local que muestre Vite, normalmente `http://localhost:5173`. 
 
 `npm run setup` crea un archivo `.env` local con claves aleatorias. No lo subas a GitHub. Si ya existe, el comando lo conserva.
 
-La API incluye registro, inicio de sesión, bloqueo tras cinco fallos, MFA TOTP y emisión de JWT tras verificar el código. También incluye productos, existencias, reportes y permisos por perfil. La interfaz de inventario se añadirá en el siguiente avance.
+La aplicación incluye registro, inicio de sesión, bloqueo tras cinco fallos, MFA TOTP y emisión de JWT tras verificar el código. La interfaz permite gestionar productos, existencias, reportes, usuarios y tiendas según el perfil. El acceso con Google y GitHub y el despliegue están pendientes.
 
 Para activar el primer administrador, registra una cuenta, completa MFA y ejecuta desde la raíz:
 

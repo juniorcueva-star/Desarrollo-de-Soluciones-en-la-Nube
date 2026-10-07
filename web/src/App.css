@@ -58,11 +58,37 @@ h1 { max-width: 660px; margin: 20px 0; font-size: clamp(45px, 5.5vw, 76px); line
 .text-button { border: 0; background: none; color: #126e73; cursor: pointer; font-weight: 700; }
 .signed-in { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .signed-in button { border: 1px solid #bcd4d4; border-radius: 9px; padding: 12px 16px; background: white; color: #126e73; cursor: pointer; font-weight: 700; }
+.dashboard { max-width: 1180px; margin: 0 auto; padding: 35px 30px 90px; }
+.dashboard-head, .dashboard-section-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+.dashboard-head h2 { margin: 8px 0 9px; font-size: 40px; letter-spacing: -.045em; }.dashboard-head p { color: #617782; }
+.outline-button { border: 1px solid #bcd4d4; border-radius: 9px; padding: 10px 14px; background: white; color: #126e73; cursor: pointer; font-weight: 700; }
+.outline-button:hover { background: #eef7f7; }.outline-button:disabled { opacity: .6; cursor: wait; }
+.dashboard-message { margin: 20px 0; padding: 12px 16px; border-radius: 9px; background: #e7f3f2; color: #145f65; }
+.summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; margin: 28px 0 50px; }
+.summary-grid > div { display: grid; gap: 12px; padding: 23px; border: 1px solid #dce9e9; border-radius: 16px; background: #fff; }
+.summary-grid span { color: #6b8088; font-size: 13px; }.summary-grid strong { color: #173440; font-size: 26px; }
+.dashboard-section-head { margin: 35px 0 17px; }.dashboard-section-head h3 { margin: 6px 0 0; font-size: 28px; letter-spacing: -.035em; }
+.table-wrap { overflow-x: auto; border: 1px solid #dce9e9; border-radius: 14px; background: white; }
+.table-wrap table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+.table-wrap th, .table-wrap td { padding: 15px 17px; border-bottom: 1px solid #e6eeee; vertical-align: middle; white-space: nowrap; }
+.table-wrap th { background: #f2f7f7; color: #51727b; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+.table-wrap tbody tr:last-child td { border-bottom: 0; }.table-wrap td { color: #2b4750; }
+.row-actions { display: flex; gap: 6px; }.row-actions button { border: 1px solid #d2e3e3; border-radius: 7px; padding: 6px 9px; background: #fff; color: #126e73; cursor: pointer; font-size: 12px; font-weight: 700; }
+.row-actions button:hover { background: #eaf5f4; }.row-actions button:disabled { opacity: .5; cursor: wait; }
+.empty-row { text-align: center; color: #71848b !important; padding: 35px !important; }
+.management-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 55px; align-items: start; }
+.management-card { display: grid; gap: 15px; padding: 28px; border: 1px solid #dce9e9; border-radius: 18px; background: white; }
+.management-card h3, .management-note h3 { margin: 0 0 6px; font-size: 25px; letter-spacing: -.03em; }
+.management-card label, .store-form label { display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: #294650; }
+.management-card input, .management-card select, .store-form input, .table-wrap select { min-width: 0; padding: 10px 12px; border: 1px solid #cbdcdd; border-radius: 8px; background: #fff; color: #173440; font: inherit; }
+.management-note { padding: 30px; border-radius: 18px; background: #e7f2f1; }.management-note h3 { margin: 10px 0; }.management-note p { color: #55717a; line-height: 1.6; }
+.admin-area { margin-top: 60px; }.store-form { display: flex; align-items: end; gap: 12px; margin-bottom: 24px; }.store-form label { flex: 1; max-width: 340px; }
 @media (max-width: 850px) {
   .hero { grid-template-columns: 1fr; padding-top: 45px; }
   .hero-art { height: 350px; }
   .stage-grid { grid-template-columns: repeat(2, 1fr); }
   .auth-section { grid-template-columns: 1fr; gap: 25px; }
+  .summary-grid { grid-template-columns: repeat(2, 1fr); }.management-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 540px) {
   .site-header { padding: 20px; }.header-label { display: none; }
@@ -73,4 +99,6 @@ h1 { max-width: 660px; margin: 20px 0; font-size: clamp(45px, 5.5vw, 76px); line
   .stage-grid { grid-template-columns: 1fr; }.stage-card { min-height: 145px; }.stage-card h3 { margin-top: 16px; }
   .site-footer { margin: 0 20px; padding-left: 0; }
   .auth-section, .signed-in { padding: 25px 20px 55px; }.auth-card { padding: 22px; }.signed-in { display: block; }
+  .dashboard { padding: 25px 20px 65px; }.dashboard-head { display: block; }.summary-grid { grid-template-columns: 1fr 1fr; }.summary-grid > div { padding: 17px; }.summary-grid strong { font-size: 21px; }
+  .dashboard-section-head h3 { font-size: 24px; }.store-form { display: block; }.store-form button { margin-top: 10px; }
 }
