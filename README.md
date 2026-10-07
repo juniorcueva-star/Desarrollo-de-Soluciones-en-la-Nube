@@ -43,4 +43,12 @@ Abre la dirección local que muestre Vite, normalmente `http://localhost:5173`. 
 
 `npm run setup` crea un archivo `.env` local con claves aleatorias. No lo subas a GitHub. Si ya existe, el comando lo conserva.
 
-La API ya incluye registro, inicio de sesión, bloqueo tras cinco fallos, MFA TOTP y emisión de JWT tras verificar el código. La interfaz para usar estos flujos y el inventario se añadirán en los siguientes commits.
+La API incluye registro, inicio de sesión, bloqueo tras cinco fallos, MFA TOTP y emisión de JWT tras verificar el código. También incluye productos, existencias, reportes y permisos por perfil. La interfaz de inventario se añadirá en el siguiente avance.
+
+Para activar el primer administrador, registra una cuenta, completa MFA y ejecuta desde la raíz:
+
+```powershell
+npm run admin:promote --workspace api -- correo@ejemplo.com
+```
+
+Este comando se ejecuta solo en la máquina del proyecto. Los registros públicos reciben el perfil de empleado; el administrador puede asignar perfiles y tiendas después.

@@ -9,18 +9,19 @@ process.env.TECHSTORE_DB_PATH = ':memory:'
 
 const { app } = await import('../src/app.js')
 const { verifyTotp } = await import('../src/security.js')
+const { database } = await import('../src/database.js')
 const server = app.listen(0, '127.0.0.1')
 await once(server, 'listening')
 const base = `http://127.0.0.1:${server.address().port}`
 after(() => server.close())
 
-async function request(path, body, token) {
+async function request(path, body, token, method = body ? 'POST' : 'GET') {
   const response = await fetch(`${base}${path}`, {
-    method: body ? 'POST' : 'GET',
+    method,
     headers: { ...(body ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) },
     body: body ? JSON.stringify(body) : undefined,
   })
-  return { status: response.status, data: await response.json() }
+  return { status: response.status, data: response.status === 204 ? null : await response.json() }
 }
 
 function currentCode(secret) {
@@ -85,4 +86,53 @@ test('registro, MFA, JWT y bloqueo de intentos', async () => {
     assert.equal((await request('/api/auth/login', { email, password: 'Incorrecta1!' })).status, 401)
   }
   assert.equal((await request('/api/auth/login', { email, password })).status, 429)
+})
+
+async function registerVerified(email, storeId = 1) {
+  const registration = await request('/api/auth/register', {
+    email, password: 'ClaveSegura1!', fullName: email, storeId,
+  })
+  assert.equal(registration.status, 201)
+  const secret = new URL(registration.data.setupUri).searchParams.get('secret')
+  const verification = await request('/api/auth/mfa/verify', {
+    challengeToken: registration.data.challengeToken, code: currentCode(secret),
+  })
+  assert.equal(verification.status, 200)
+  return verification.data.token
+}
+
+test('permisos de tienda, existencias y reportes', async () => {
+  const adminToken = await registerVerified('admin@example.com')
+  database.prepare("UPDATE users SET role = 'admin' WHERE email = 'admin@example.com'").run()
+  const secondStore = await request('/api/stores', { name: 'Tienda Sur' }, adminToken)
+  assert.equal(secondStore.status, 201)
+
+  const managerToken = await registerVerified('gerente@example.com')
+  const employeeToken = await registerVerified('ventas@example.com')
+  const auditorToken = await registerVerified('auditor@example.com')
+  database.prepare("UPDATE users SET role = 'manager' WHERE email = 'gerente@example.com'").run()
+  database.prepare("UPDATE users SET role = 'auditor' WHERE email = 'auditor@example.com'").run()
+
+  const ownProduct = await request('/api/products', {
+    storeId: 1, sku: 'LAP-01', name: 'Laptop de prueba', priceCents: 250000, stock: 10,
+  }, managerToken)
+  assert.equal(ownProduct.status, 201)
+  const otherProduct = await request('/api/products', {
+    storeId: secondStore.data.id, sku: 'TAB-01', name: 'Tableta de prueba', priceCents: 50000, stock: 3,
+  }, adminToken)
+  assert.equal(otherProduct.status, 201)
+
+  assert.equal((await request('/api/products', null, managerToken)).data.length, 1)
+  assert.equal((await request('/api/products', null, auditorToken)).data.length, 2)
+  assert.equal((await request(`/api/products/${otherProduct.data.id}`, null, managerToken, 'DELETE')).status, 403)
+  assert.equal((await request(`/api/products/${ownProduct.data.id}`, {
+    sku: 'LAP-01', name: 'Laptop alterada', priceCents: 1,
+  }, employeeToken, 'PUT')).status, 403)
+  const changedStock = await request(`/api/products/${ownProduct.data.id}/stock`, { delta: -2 }, employeeToken, 'PATCH')
+  assert.equal(changedStock.data.stock, 8)
+  assert.equal((await request(`/api/products/${ownProduct.data.id}/stock`, { delta: -100 }, employeeToken, 'PATCH')).status, 409)
+  assert.equal((await request(`/api/products/${ownProduct.data.id}/stock`, { delta: 1 }, auditorToken, 'PATCH')).status, 403)
+  assert.equal((await request('/api/reports/summary', null, managerToken)).data.productCount, 1)
+  assert.equal((await request('/api/reports/summary', null, auditorToken)).data.productCount, 2)
+  assert.equal((await request('/api/reports/summary', null, employeeToken)).status, 403)
 })

@@ -45,6 +45,28 @@ database.exec(`
   ) STRICT;
 
   CREATE INDEX IF NOT EXISTS idx_auth_challenges_user ON auth_challenges(user_id);
+
+  CREATE TABLE IF NOT EXISTS products (
+    id INTEGER PRIMARY KEY,
+    store_id INTEGER NOT NULL REFERENCES stores(id),
+    sku TEXT NOT NULL COLLATE NOCASE,
+    name TEXT NOT NULL,
+    price_cents INTEGER NOT NULL CHECK (price_cents >= 0),
+    stock INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0),
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL,
+    UNIQUE (store_id, sku)
+  ) STRICT;
+
+  CREATE TABLE IF NOT EXISTS stock_events (
+    id INTEGER PRIMARY KEY,
+    product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    delta INTEGER NOT NULL,
+    created_at INTEGER NOT NULL
+  ) STRICT;
+
+  CREATE INDEX IF NOT EXISTS idx_products_store ON products(store_id);
   INSERT OR IGNORE INTO stores (id, name) VALUES (1, 'Tienda de demostración');
-  INSERT OR REPLACE INTO app_meta (key, value) VALUES ('schema_version', '2');
+  INSERT OR REPLACE INTO app_meta (key, value) VALUES ('schema_version', '3');
 `)
