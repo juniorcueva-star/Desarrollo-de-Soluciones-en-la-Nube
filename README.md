@@ -29,6 +29,7 @@ Se requiere Node.js 24 o superior y npm. Desde la raíz del repositorio:
 
 ```powershell
 npm install
+npm run setup
 npm run dev:api
 ```
 
@@ -40,4 +41,6 @@ npm run dev:web
 
 Abre la dirección local que muestre Vite, normalmente `http://localhost:5173`. La pantalla indica si la API y SQLite están conectadas. El endpoint de comprobación también se puede abrir en `http://127.0.0.1:3001/api/health`.
 
-La aplicación todavía está en su etapa de preparación. El registro, el inventario y los inicios de sesión se añadirán en los siguientes commits.
+`npm run setup` crea un archivo `.env` local con claves aleatorias. No lo subas a GitHub. Si ya existe, el comando lo conserva.
+
+La API ya incluye registro, inicio de sesión, bloqueo tras cinco fallos, MFA TOTP y emisión de JWT tras verificar el código. La interfaz para usar estos flujos y el inventario se añadirán en los siguientes commits.

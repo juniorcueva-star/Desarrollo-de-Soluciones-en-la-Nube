@@ -1,11 +1,13 @@
 {
   "name": "techstore",
   "private": true,
+  "type": "module",
   "workspaces": ["api", "web"],
   "engines": {
     "node": ">=24"
   },
   "scripts": {
+    "setup": "node scripts/setup-env.js",
     "dev:api": "npm run dev --workspace api",
     "dev:web": "npm run dev --workspace web",
     "start:api": "npm run start --workspace api",
