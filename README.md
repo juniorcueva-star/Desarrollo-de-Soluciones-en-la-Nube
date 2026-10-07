@@ -22,6 +22,7 @@ Aplicación web para el caso de estudio del laboratorio 8 de Desarrollo de Soluc
 El desarrollo comienza en la laptop. La configuración de OAuth y el despliegue en AWS se harán en etapas posteriores, cuando la aplicación local funcione.
 
 Consulta [el plan de trabajo](docs/plan.md) para ver las etapas y sus criterios de avance.
+Para preparar el acceso social consulta [Google y GitHub](docs/oauth.md); para publicar, consulta [despliegue en AWS](docs/despliegue-aws.md).
 
 ## Ejecutar en esta laptop
 
@@ -43,7 +44,7 @@ Abre la dirección local que muestre Vite, normalmente `http://localhost:5173`. 
 
 `npm run setup` crea un archivo `.env` local con claves aleatorias. No lo subas a GitHub. Si ya existe, el comando lo conserva.
 
-La aplicación incluye registro, inicio de sesión, bloqueo tras cinco fallos, MFA TOTP y emisión de JWT tras verificar el código. La interfaz permite gestionar productos, existencias, reportes, usuarios y tiendas según el perfil. El acceso con Google y GitHub y el despliegue están pendientes.
+La aplicación incluye registro, inicio de sesión, bloqueo tras cinco fallos, MFA TOTP y emisión de JWT tras verificar el código. La interfaz permite gestionar productos, existencias, reportes, usuarios y tiendas según el perfil. El código del acceso con Google y GitHub está preparado; requiere registrar las aplicaciones OAuth y probarlas con credenciales reales. El despliegue requiere un dominio y la creación de recursos en AWS.
 
 Para activar el primer administrador, registra una cuenta, completa MFA y ejecuta desde la raíz:
 

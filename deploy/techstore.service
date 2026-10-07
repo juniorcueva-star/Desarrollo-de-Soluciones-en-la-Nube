@@ -1,0 +1,19 @@
+[Unit]
+Description=TechStore web and API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/techstore
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node --env-file=/home/ubuntu/techstore/.env /home/ubuntu/techstore/api/src/server.js
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
