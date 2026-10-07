@@ -1,6 +1,6 @@
 # Despliegue de TechStore en AWS Lightsail
 
-Se usará una instancia Ubuntu con Node.js 24, SQLite persistente y Caddy para HTTPS. La interfaz compilada y la API salen del mismo proceso. Necesitas una cuenta AWS activa y un dominio propio para el certificado HTTPS y las redirecciones de Google.
+Se usará una instancia Ubuntu con Node.js 24, SQLite persistente y Caddy para HTTPS. La interfaz compilada y la API salen del mismo proceso. Necesitas una cuenta AWS activa y un nombre público para HTTPS; para este laboratorio puedes usar gratis `sslip.io`, sin registrar un dominio ni crear otra cuenta.
 
 ## 1. Antes de crear recursos
 
@@ -26,7 +26,9 @@ Si la cuenta está en el [AWS Free plan](https://docs.aws.amazon.com/awsaccountb
 2. Elige una región, Linux/Unix, Ubuntu 24.04 y un plan con al menos 1 GB de RAM e IPv4 público.
 3. Nómbrala `techstore` y revisa el precio antes de crearla.
 4. En **Networking**, crea y adjunta una IP estática. Abre los puertos TCP 80 y 443; limita SSH 22 a tu IP si es posible. No abras el puerto 3001 públicamente.
-5. En el DNS de tu dominio, crea un registro A que apunte a la IP estática.
+5. Si tienes dominio propio, crea un registro A hacia la IP estática. Si no, forma un nombre gratuito reemplazando los puntos de la IP por guiones y agregando `.sslip.io`. Por ejemplo, la IP `12.34.56.78` corresponde a `12-34-56-78.sslip.io`. No hay que configurar DNS ni crear una cuenta adicional. Verifica desde tu laptop que el nombre resuelva a la IP antes de seguir.
+
+`sslip.io` es un servicio DNS externo gratuito para este laboratorio. Si cambias la IP, también cambiará la URL; por eso se recomienda la IP estática. [Funcionamiento y HTTPS de sslip.io](https://sslip.io/).
 
 Guías oficiales: [crear instancia](https://docs.aws.amazon.com/lightsail/latest/userguide/how-to-create-amazon-lightsail-instance-virtual-private-server-vps.html), [IP estática](https://docs.aws.amazon.com/lightsail/latest/userguide/lightsail-create-static-ip.html) y [firewall](https://docs.aws.amazon.com/lightsail/latest/userguide/understanding-firewall-and-port-mappings-in-amazon-lightsail.html).
 
