@@ -2,6 +2,12 @@
 
 Aplicación web para el caso de estudio del laboratorio 8 de Desarrollo de Soluciones en la Nube. El objetivo es gestionar el inventario de una cadena de tiendas con autenticación de varios factores y permisos según el perfil de cada usuario.
 
+## Aplicación publicada
+
+[Abrir TechStore](https://98-90-249-127.sslip.io/) · [Comprobar API](https://98-90-249-127.sslip.io/api/health)
+
+La aplicación está alojada en AWS Lightsail y sigue disponible aunque la laptop esté apagada, mientras la instancia y la cuenta AWS permanezcan activas. El acceso local con contraseña y MFA está operativo; los botones de Google y GitHub requieren configurar y probar las credenciales OAuth.
+
 ## Alcance del laboratorio
 
 - Registro con correo único, nombre completo, tienda y contraseña segura.
@@ -19,7 +25,7 @@ Aplicación web para el caso de estudio del laboratorio 8 de Desarrollo de Soluc
 - Base de datos local: SQLite mediante `node:sqlite` de Node.js 24.
 - Control de versiones: Git y GitHub.
 
-El desarrollo comienza en la laptop. La configuración de OAuth y el despliegue en AWS se harán en etapas posteriores, cuando la aplicación local funcione.
+El servidor publicado usa Ubuntu, Caddy para HTTPS y un nombre gratuito de `sslip.io` asociado a la IP estática de Lightsail.
 
 Consulta [el plan de trabajo](docs/plan.md) para ver las etapas y sus criterios de avance.
 Para preparar el acceso social consulta [Google y GitHub](docs/oauth.md); para publicar, consulta [despliegue en AWS](docs/despliegue-aws.md).
@@ -44,7 +50,7 @@ Abre la dirección local que muestre Vite, normalmente `http://localhost:5173`. 
 
 `npm run setup` crea un archivo `.env` local con claves aleatorias. No lo subas a GitHub. Si ya existe, el comando lo conserva.
 
-La aplicación incluye registro, inicio de sesión, bloqueo tras cinco fallos, MFA TOTP y emisión de JWT tras verificar el código. La interfaz permite gestionar productos, existencias, reportes, usuarios y tiendas según el perfil. El código del acceso con Google y GitHub está preparado; requiere registrar las aplicaciones OAuth y probarlas con credenciales reales. El despliegue requiere un dominio y la creación de recursos en AWS.
+La aplicación incluye registro, inicio de sesión, bloqueo tras cinco fallos, MFA TOTP y emisión de JWT tras verificar el código. La interfaz permite gestionar productos, existencias, reportes, usuarios y tiendas según el perfil. El código del acceso con Google y GitHub está preparado; requiere registrar las aplicaciones OAuth y probarlas con credenciales reales.
 
 Para activar el primer administrador, registra una cuenta, completa MFA y ejecuta desde la raíz:
 
